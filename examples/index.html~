@@ -1,0 +1,11 @@
+<script type=text/javascript src=plantuml-encoder.min.js></script>
+<script type=text/javascript src=FluentUML.js></script>
+<script type=text/javascript>
+var UML = new FluentUML();
+</script>
+<script type=text/javascript src=mvc.js></script>
+<script type=text/javascript>
+var src = "https://www.plantuml.com/plantuml/img/" + window.plantumlEncoder.encode(UML.toString());
+document.write('<img src="' + src + '"/>');
+document.write(UML.toString().replace(/[\u00A0-\u9999<>\&]/g, function(i) { return '&#'+i.charCodeAt(0)+';'; }));
+</script>

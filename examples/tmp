@@ -1,0 +1,67 @@
+actor x1 <<generic>> [
+**Authenticated User**
+]
+actor x2 <<generic>> [
+**Artist**
+]
+actor x3 <<generic>> [
+**Administrator**
+]
+agent x4 <<usecase>> [
+**Log in**
+]
+agent x5 <<usecase>> [
+**Log out**
+]
+Request an arrangement x6 <<usecase>> [
+**Request session**
+]
+Edit own data x7 <<usecase>> [
+**Manage profile**
+]
+agent x8 <<usecase>> [
+**Modify info**
+]
+agent x9 <<usecase>> [
+**Manage sessions**
+]
+agent x10 <<usecase>> [
+**Manage calendar**
+]
+agent x11 <<usecase>> [
+**Modify session**
+]
+agent x12 <<usecase>> [
+**Assign artist**
+]
+agent x13 <<usecase>> [
+**Create session**
+]
+agent x14 <<usecase>> [
+**Modify status**
+]
+agent x15 <<usecase>> [
+**Manage users**
+]
+agent x16 <<usecase>> [
+**Modify user**
+]
+agent x17 <<usecase>> [
+**Delete user**
+]
+x1 <|.> x2: Extends
+x2 <|.> x3: Extends
+x1 ..> x4
+x1 ..> x5
+x1 ..> x6
+x1 ..> x7
+x7 ..> x8
+x7 ..> x9
+x2 ..> x10
+x10 ..> x11
+x11 ..> x12
+x11 ..> x13
+x11 ..> x14
+x3 ..> x15
+x15 ..> x16
+x15 ..> x17

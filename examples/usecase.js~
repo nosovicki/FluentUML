@@ -1,0 +1,24 @@
+var au = UML.box('generic', 'actor', 'Authenticated User'),
+    a1 = au.copyAs('Artist'),
+    a = au.copyAs('Administrator'),
+    li = UML.box('usecase', 'agent', 'Log\nin', '', 11);
+au
+.extendBy(a1, 1)
+.extendBy(a, 1);
+au
+.connect(li)
+.connect(li.copy('Log\nout'))
+.connect(li.copy('Request session', 'Request an arrangement'))
+.chain(li.copy('Manage profile', 'Edit own data'))
+.connect(li.copy('Modify info'))
+.connect(li.copy('Manage sessions'));
+a1
+.chain(li.copy('Manage calendar'))
+.chain(li.copy('Modify session'))
+.connect(li.copy('Assign artist'))
+.connect(li.copy('Create session'))
+.connect(li.copy('Modify status'));
+a
+.chain(li.copy('Manage users'))
+.connect(li.copy('Modify user', '', 6))
+.connect(li.copy('Delete user', '', 6))

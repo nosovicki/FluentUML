@@ -1,0 +1,114 @@
+function FluentUML() {
+	this.maxBoxSize = 40;
+	this.maxEdgeLabelSize = 15;
+	this.nodes = [];
+	this.edges = [];
+	this.parents = [];
+	this.children = [];
+}
+
+
+(function() {
+var wordwrap = function(str, width) {
+    var ar = [];
+    str.replace(new RegExp('(?:\\S(?:.{0,' + width + '}\\S)?(?:\\s+|-|$)|(?:\\S{' + width + '})|(?:\n))', 'g'), function(s) { ar.push(s); return s; });
+    return ar;
+}
+FluentUML.prototype.box = function(type, form, name, txt, width) {
+	return new node(this, type, form, name, txt, width);
+}
+FluentUML.prototype.toString = function() {
+	res = [];
+	for (var i = 0; i < this.nodes.length; ++i) {
+		var el = this.nodes[i];
+		if (!this.parents[el]) {
+			var children = this.children[el];
+			if (children) {
+				res.push(el.toShortString());
+				res.push(' {\n');
+				for (var j = 0; j < children.length; ++j) {
+					res.push(children[j].toString());
+				}
+				res.push('}\n');
+			} else if (el.form == 'note') {
+				res.push(el.toShortString() + '\n');
+			} else {
+				res.push(el.toString());
+			}
+		}
+	}
+	for (var i = 0; i < this.edges.length; ++i) {
+		res.push(this.edges[i].toString());
+	}
+	return res.join('');
+}
+function node(diagram, type, form, name, txt, width) {
+	this.diagram = diagram;
+	this.type = type || 'generic';
+	this.form = form || 'agent';
+	this.name = name || undefined;
+	this.rem = txt || '';
+	this.width = width || diagram.maxBoxSize;
+	diagram.nodes.push(this);
+	this.id = diagram.nodes.length;
+}
+node.prototype.toString = function() {
+	var brackets = '[]';
+	var lbl = '**' + wordwrap(this.name, this.width).join('**\n**') + '**';
+	var rem = this.rem ? ('\n' + wordwrap(this.rem, this.width).join('\n')) : '';
+	var stereo = (this.type ? (' <<'+this.type+'>>') : '');
+	return this.form + ' x' + this.id + stereo + ' ' + brackets[0] + '\n' + lbl + rem + '\n' + brackets[1] + '\n';
+}
+node.prototype.toShortString = function() {
+	var stereo = ((this.type && this.form != 'note') ? (' <<'+this.type+'>>') : '');
+	var lbl = wordwrap(this.name, this.diagram.maxBoxSize).join(this.form == 'note' ? '\\n' : '**\\n**')
+	return this.form + ' "' + lbl + '" as x' + this.id + stereo;
+}
+	
+function edge(diagram, fr, to, length, label, arrowL, arrowR, line) {
+	this.diagram = diagram;
+	this.from = fr;
+	this.to = to;
+	this.length = length || 2;
+	this.label = label || '';
+	this.arrow = arrowR || '>';
+	this.line = line || '.';
+	this.arrow2 = arrowL || '';
+	diagram.edges.push(this);
+	this.id = diagram.edges.length;
+}
+edge.prototype.toString = function () {
+	var lbl = this.label ? (': ' + wordwrap(this.label, this.diagram.maxEdgeLabelSize).join('\\n')) : '';
+	return 'x' + this.from.id + ' ' + this.arrow2 + this.line.repeat(this.length) + this.arrow + ' x' + this.to.id + lbl + '\n';
+}
+node.prototype.copyAs = function(name, txt, width, form, type) {
+	return new node(this.diagram, type || this.type,  form || this.form, name || this.name, txt || this.rem, width || this.width);
+}
+node.prototype.copy = node.prototype.copyAs;
+node.prototype.connect = function(node, length, label, arrowL, arrowR, line) {
+	new edge(this.diagram, this, node, length, label, arrowL, arrowR, line);
+	return this;
+}
+node.prototype.chain = function(node, len, label, arrowL, arrowR, line) {
+	new edge(this.diagram, this, node, len, label, arrowL, arrowR, line);
+	return node;
+}
+node.prototype.extendBy = function(node, len) {
+	return this.chain(node, len, 'Extends', '<|',  ' ');
+}
+	
+node.prototype.contains = function() {
+	for (i = 0; i < arguments.length; i++) {
+		var child = arguments[i];
+		this.diagram.children[this] = this.diagram.children[this] || [];
+		this.diagram.children[this].push(child);
+		this.diagram.parents[child] = this;
+	}
+	return this;
+}
+//node.prototype.Type = function (str) { this.type = str; return this; }
+//node.prototype.Form = function (str) { this.form = str; return this; }
+//node.prototype.Name = function (str) { this.name = str; return this; }
+//node.prototype.Remark = function (str) { this.rem = str; return this; }
+//node.prototype.Width = function (val) { this.width = val; return this; }
+})();
