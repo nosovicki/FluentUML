@@ -3,18 +3,18 @@
 A wrapper around PlantUML for writing architecture diagrams in Javascript
 
 **Usage**
-
     <script type=text/javascript src=plantuml-encoder.min.js></script>
     <script type=text/javascript src=FluentUML.js></script>
     <script type=text/javascript>
-		var master = UML.node('Master').type('Server').note('Serves requests')
-		var slave = UML.node('Slave').type('Client').note('Responsible for update')
-		var dbA = UML.database('Table A')
-		var dbB = UML.database('Table B')
-		master.right(dbA)
-		slave.up(master).note('Pull changes')
-		slave.right(dbB)
-		document.body.innerHTML = UML.toHTML()
+    		var UML = new FluentUML();
+		var master = UML.node('Master').type('Server').note('Serves requests');
+		var slave = UML.node('Slave').type('Client').note('Responsible for update');
+		var dbA = UML.database('Table A');
+		var dbB = UML.database('Table B');
+		master.right(dbA);
+		slave.up(master).note('Pull changes');
+		slave.right(dbB);
+		document.body.innerHTML = UML.toHTML();
     </script>
 
 <img src="https://www.plantuml.com/plantuml/img/bP9FJyCm3CNl-HG-zp1Ks0bLbROXJY0XjXlYaALU6vR69Kxt1yHtnzkghLocScbL-_tYvxnc7FSESsMSPdwmkWowXc_rP3qkAclM7faXLO_auzn-8QItwaSfniyMlS71GCjeD0_Nq_83JHmiroRQZOtxmO2XkY6FVlY80Xj7-_e_24STXwySRMrzELYUtNJ9ALvRt-W3L9CdKmMg4M9eiTVn576gpReCrFfYHeu2R2iR-ngkT45RyG0hxRZVAN2bMnVx3YxDBjefXG93t_15ShxjQw8WWMjVkgidIT0K5hYB4sTBVqW3Z3mmA4y5mYw5B9jZs638StXJIVAiMRf9ea0TwonpvD_boEgzOsw5cJahntJCtEaD7f5NP37ETkaGLd9bRLD8f4BAIozbQzZT2RBG1y7aJtryha-bBiPW54Ov2A1a8epQuqTw3o-jSs0gMLtCvQVcIJbMlm00">
