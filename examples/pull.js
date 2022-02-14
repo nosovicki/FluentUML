@@ -17,11 +17,10 @@
  */
 
 UML.boxWidth(20);
-var a = UML.node('Master').type('Server').note('Serves requests')
-var b = UML.node('Slave').type('Client').note('Responsible for update')
-var ta = UML.database('Table A')
-var tb = UML.database('Table B')
-
-a.right(ta)
-b.up(a).note('Pull changes')
-b.right(tb)
+var master = UML.node('Master').type('Server').note('Serves requests')
+var slave = UML.node('Slave').type('Client').note('Responsible for update')
+var dba = UML.database('Table A')
+var dbb = UML.database('Table B')
+master.right(dba)
+slave.up(master).note('Pull changes')
+slave.right(dbb)
