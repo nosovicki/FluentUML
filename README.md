@@ -1,26 +1,122 @@
 # FluentUML
 
-A wrapper around PlantUML for writing architecture diagrams in Javascript
+Simple wrapper around PlantUML for writing architecture diagrams in Javascript
 
-**Usage**
+## Setup
 
-    <script type=text/javascript src=plantuml-encoder.min.js></script>
-    <script type=text/javascript src=FluentUML.js></script>
-    <script type=text/javascript>
-        var UML = new FluentUML();
-        var master = UML.node('Master').type('Server').note('Serves requests');
-        var slave = UML.node('Slave').type('Client').note('Responsible for update');
-        var dbA = UML.database('Table A');
-        var dbB = UML.database('Table B');
-        master.right(dbA);
-        slave.up(master).note('Pull changes');
-        slave.right(dbB);
-        document.body.innerHTML = UML.toHTML();
-    </script>
+```html
+<script type=text/javascript src=plantuml-encoder.min.js></script>
+<script type=text/javascript src=FluentUML.js></script>
+```
 
-<img src="https://www.plantuml.com/plantuml/img/bP9FJyCm3CNl-HG-zp1Ks0bLbROXJY0XjXlYaALU6vR69Kxt1yHtnzkghLocScbL-_tYvxnc7FSESsMSPdwmkWowXc_rP3qkAclM7faXLO_auzn-8QItwaSfniyMlS71GCjeD0_Nq_83JHmiroRQZOtxmO2XkY6FVlY80Xj7-_e_24STXwySRMrzELYUtNJ9ALvRt-W3L9CdKmMg4M9eiTVn576gpReCrFfYHeu2R2iR-ngkT45RyG0hxRZVAN2bMnVx3YxDBjefXG93t_15ShxjQw8WWMjVkgidIT0K5hYB4sTBVqW3Z3mmA4y5mYw5B9jZs638StXJIVAiMRf9ea0TwonpvD_boEgzOsw5cJahntJCtEaD7f5NP37ETkaGLd9bRLD8f4BAIozbQzZT2RBG1y7aJtryha-bBiPW54Ov2A1a8epQuqTw3o-jSs0gMLtCvQVcIJbMlm00">
+## Usage
 
-**Another example**. See *index.html* and *examples/* for more.
+```javascript
+// Instantiate UML object
+var UML = new FluentUML();
+
+// Draw something
+var a = UML.agent('a').right(UML.agent('b'));
+
+// Display your drawing
+document.write(UML.toHTML()); // Alternatively, myImage.src = UML.toURL();
+```
+
+<img src="https://www.plantuml.com/plantuml/img/bL51JiCm4Bpx5Nv1KNgkAZKWJjpe3N5OdArZukoctWrjGFmTHoeqfyfSBCtEZ7VisOXE4RV6HH1v2E0JzFRBF0N2VHjSHoXYA_F8fC_X4ssrDj_621v798V5Xb7GWPJh-UqTdHRBmMdu23eL6npt0nDI-Oe6XyXJ_n-BA6ZvapNqWNonV7DtQSv85sY0sTGpiMiJzsWrZRXWY1LhS9rFF59ppv6JFRL1bnffeU5Jpc0F46N9D7Y0CUeomPMyL5jpQZ0j0rybVxzzIvHouK0-thmf5yrfZsVTnU1fRiEwV60ou6TmhkoBsPdNNxZEiCump-qghROsZymF">
+
+## Basic drawing example
+
+```javascript
+var master = UML.node('Master').type('Server').note('Serves requests');
+var slave = UML.node('Slave').type('Client').note('Responsible for update').width(15);
+slave.up(master).note('Pull changes');
+var db = UML.database('My storage').width(5)
+slave.right(db);
+master.right(UML.cloud('Unknown storage').width(10));
+UML.cloud('Cloud').contains(master);
+UML.frame('Premises').contains(slave,db)
+```
+
+<img src="https://www.plantuml.com/plantuml/img/bL8zRzim4DtvAmuUFQHmadOe306DYqm94DJfL7GuKsU9DNNdyaXRRk7_tdFY99e2TH4XlGyzthkvvaEaolc8gby3DWax-Elk0jDZ6_o6IHLcxbOuByCVWjcbEpgdzBiGUnejA4eUTJnVLh_8vz5qz3diGZwC5dZfjiB4utzHqpRAeViVYMRCuw-SGnUu6KsVVpWtvtGJU8idKISilatI4UHKQ82mPBf1lscI5AuN4YN1lWrvoD4MQzbR1bXZr25IqnfBpCC4R-2vsXj9DQLXu3VAwxJV8oKh7Bc9xpfPqP8UgSzVOcZur0PuUr2o1PPIGtyDFzntth3i6TpIoDYG-tb69ulJCG5Kw3_QY5bgWdu6y_cIqevILPbwEhr7DSVfr9d3wRjQDjjtpMfEHxUs80IJXqHTKD9dkq-lTfTcjuZ1KftjbX5tzEJsZTJce64L2TRMW2lRsbR4NEt0bKqH-YlJt1-6sO_EFE6YN5HWOJ_3GuaHV6kpicJLCvYUm2jdbtbvkNR_0000">
+
+
+## Node types
+
+```javascript
+// Display all available nodes
+UML.showNodes();
+```
+<img src="https://www.plantuml.com/plantuml/img/bPLFZziW4CNlV0gKOowjtNzRAOhKtLLFLGzjRbKF14yS6ioaWBjEL_dkdS7U91UGUudcXT-R00_8AiIJXRNGLeNmQ5JhLIUVnHVZOBCt-k0W15c9p-ZYT_CNP5MBin01VlVWDCmsz06q2lDvtFu27MVZIaVpnyJJR8F6xeWEtFoVQE1eyTJzZoL45USlEPhEk7Oslder9IV2mRYZObE73lNUOmSo-XvkHXn6k5Vwq7hiNVE05hrysfjuouIzQl29vY1toeRRaGPsghVnTWRNmIdQU_GD-Di9Nv7BRfSWJu4hrzfY9meQ_GQ6-CcQrd4QKjC7UB6ZOP2BhzX0M4WLv53H9YPU3hLShLAvNiiVOhdSc6XXkHHIV8DE-OFuALJBpOOtJ79P87qqE-ecXxSCJohFRtdBbJ_9uHtnBohFQ-KRERmdbgi2nrTMBYvZuwe_i8z7oFWihlnPQEEr1JdSCP7gKc_iQH8VKpCg2oHQIyaPTBpbhzbm_QPacuu4cQfacdJ9ug97IuOw6PBAuusAQai7atWEzKNc3VJZz8GGph6E8W_l36zbnOboMG3Hqcacb0CTHG5EXtYeECHKvz4z3Af5Hp3dEQayRlYIq3dbxfpgHUSjLcs1ThlcJ5ETHntTEY8vI2vBOAHBcWR6urhNuaZl4bqvgZcdIULR7C47NdVDCOqY3zFVLC-TEQTKvz7B-qCuPtNHUGizyFf0ECULwXAAVbpaNOAJokFJeqeuXpMfF7uM_m00">
+
+```javascript
+// Each node gets instantiated by corresponding method
+UML.cloud('a').right(UML.database('b'))
+```
+
+<img src="https://www.plantuml.com/plantuml/img/bP8nRyCW48LtVWM_89KpHv7YLfswDLlLuG8Ncnhk73WQkrN_UuaKDPuYkZ3S-nuyU6oIp1wtodX8wSb15o7eR_NY2FUzCmDXIhfHpqpowhvGDslrerJ2KqOoM6t82GsaUfuF7sYa6WSZxjF9N6qm74OcfFeZB8wUv_0VInAG-YkB2uwwQdppS6rEfS7H21TJO6BJHmwe9MPSACI2BPYXYvp9FhBdgC-zaoMJUh1yBXdq4NnQAXQFaBqi4zp4QxKjHujn6VY6_BtsFIYMme4wVtUdKZJ7FKwoywwZInlQb0LZ-S2ShPuQ_QPswbrP43YKM7fQbqbR9aNIgxZQwZ9Ilm00">
+
+## Edge lines
+```javascript
+// Display all available styles
+UML.showEdgeLines()
+```
+
+<img src="https://www.plantuml.com/plantuml/img/bP5DKy8m48Rl-HKxtC41vSifdG4_JjxavdW8wT96qYmcgO0E_7OJGMalJBnqPj_dtUvctyIwdSAK2SMjlPSyDxo4B_OaDSuBALOQhOKkUoJjdkKdGhV7zenPVAzG2unkg2mARkFzj7X3uQBjN3Zv8Tqkka5GkIQDEdv4Xcj5k_8_BTPn5_za9qkfysXxSdLAZjcLr6iUcahI90f39O8p5TQ89eSpBbQveKfdTwJ8mAQGhkwn1SzeutU09LUsJZ9Syagv-WPdU8fsHYP3Kr_uRFcxzYMJyO5pdQkBV_91avdZrasLp7L80uJ_e65BZn5Q3rcE44vdMy0jRBl-aeelKC6s1oziobv_osjVpixbJPFsctJGfCCc7JNf-4JtpC-43e0VTWj9qkcaAQJCZu9s4Fj1RBUFuW1W4iHX42UJepW2E0Hn7CJ3uKVy1W00">
+
+```javascript
+// Set line styles on edge objects
+a.down(b).line('-')
+c.down(d).line('~')
+```
+
+<img src="https://www.plantuml.com/plantuml/img/bP6nJiCm48PtFuLVe48f7QjAJIicDheXXiE-9YRENR0lj07HPyUH2ibKcINIf_j-v-n_7MNmk576Gunx1rM0Ld-fHqTug9rf26FKXNfWaYVtYRfOgc-b8hxtI0Qp0tr40p7VvzStD9AjWn7tuMJ83XXkEoQa_5zOx3mFxNyYKK3ohookTLHbw-kxQtCgDeuw64Cj4viwS8jQGe-p2R5W2QQf0lTaT-mvw5FjPEx46YoVqWxw23xE9nQFq7kPRp0DhzMM72o6-SAJylVQjwIG2WUg_CsJKj4S3dYMhNSLZMreapuO55GZd0lzhBRgvHUN2Si9xnFk9bmbt2TCARsmYurE0PKaVR6N4LRg1m00">
+
+## Arrows
+
+```javascript
+// Display all available arrow types
+UML.showArrows()
+```
+
+<img src="https://www.plantuml.com/plantuml/img/bPLVRzem5CNV_IaiU6c3h6AlVoXY4RJJf4cRDgrzQuha9YPu3JQpJO6DzhFl6kXAd0on5z3jjNy-zRd7zAnR5Y96QS6j_I1vRlW4_qQVfHAtOva-Ac4jfkYZLkv6_XAOClICa1K_PqAbuk0DCojIRWzVhnz-YDGTl9odJZv9jpnuGwedKws4Elo8J4mBlPpypnRhk3lyNtPo8bL-yFBUoTOvP1-bcdA_QQALJiT6JmHsPYPsEaexSSNJnzpecSgkTQ4Dde-bsrrZnppJSz20HxomkvrCZFYiSBiAtffRQw-qoOJP5VosvEzjxrjam72kyc8l2OpMvbOitA2GkV9ku1G-X44ZQ0lS61YZvxQ1kSKB2hTOy0THu0N3TsY0xb_BTr1UlPMdvUvPkNjUxbwKkvrozxBSfUroczAW7mYZWJ8QIAE1DXg8eu4w6iYZWJuMw6E1FXReOu4-5kXZWJuMw6E1FXReOw_wdX5uXdilvYN6u5SNHr6ZqHl1168B8_YUdiOzGkBUYVzJt6X4KQ8-gP4s4-waLedwMEWvZX5uYtjhZEUSrN8yg4owMIgV8wLdDb5VO0XvBZmC9652xiOoouIwXs9nYc0-S0G7H51TrF4ZGg8I_Th7mKglSwimW9uZ62ki0QgXkgo3Qa9q2Jh8SoDo_Wezhq0xo4yZRWCLlc0Iwx1jGjebx3UZdsGcCd-x4BCHJzSNqQdWQHlvQSR7m3_oTQrdnuGSbVZVuPT4cWhVAmqFOCZ70RVWW9QlQyri4T8ABbivBZTFHRoH68B1GyWHRWAuwUjQ5vk4DFTTE2GD0o19FA7MCaAIf4om_nWpMdMFWdqGLZo4CuRO1xNkY24Xmo0IOs4alAlRQwtwni0tvgEs0lBAXuJLfsr5o2hU1sTLpnXundm2Lslw1byVmfNd1mUigLN361W63mjGkq3jRgWNzTGk8TqwQZLq3587pn7k0xFlwreJ-uJqIxIlSoMC7Slf6birZdNG7m00">
+
+```javascript
+// Set arrow type on edge object
+a.down(b).arrowBack('*').arrow('#');
+```
+
+<img src="https://www.plantuml.com/plantuml/img/bL6nJiCm4Dtz5PRO68hIkK9gG4niT4CCXtrrJEoxO5ze0-BVSQH2CrLciVJklUTxzjjacGBUAXCWvtiFBa7KN-hH4-uwRth2d7MZ7fZaoN-YRjRgMwcCxoEImMh3cD50hjVpwniQgPQ34V_XPQes68u34rBz2ej3u2d-nv85fFx9ugCdLotVt9oQKxdtDC1iYanikiGHjQGH5monO0kcTub7idSSEEb3vsMfoHrOFfGCUWyXBncBUnY3B1ESoLErBIUBQHduBFdxxKkYL0e7Sk7YJQLeJZiyoZPuHtCRsfG3am8tWsEZdzLMlVp2TO5jWMMkhrTsTQNBJFq0">
+
+## Themes
+
+```javascript
+// Having done your drawing (see "examples/gis.js"),
+// compare a few themes
+var compare = ['bluegray','blueprint','aws-orange'];
+compare.map(function(t) {
+    UML.theme(t);
+    document.write('<h1>'+t+'</h1><img src="' + UML.toURL() + '"/>');
+});
+```
+ 
+<img src="https://www.plantuml.com/plantuml/img/RP9DRzf048Rl-okcERL8sSG14Y95I2XHUsaa6b1pYA9ex1rW5REBTjSjgEf_x-mQKuDp0SzutcS-_7uAAreJv6L5IuSxuT-rsQ33DM0Hh9lJDanAlJHhCW4A_Y4dMaMbDXHs6mBhmigA1US8phwMrZgObcXWRctfpm0zR3Fu8mgxtbWJMTihkBjxdBtzr5xRyHXUHA-NeUpr18WdyhPo1K4gzpfeQyIhS5G4DCkIODjdyQGAzdxoaBHPBc6ESQxbSU7Wf92R518U72u2rwPkJN0i77Q5IiACYihfi4l29k3jF7aVJyICXOxoQvOhMrGnsUX9ffiaxJSov32GWjQn11eLORRGo6yK1Zm0Rxh00KfueWsV_aDa_Gf4euABXjXQSzHPyuhFWtwLMtGgSMlQepMQ3S5tWi-LZtzxsHS6_cqZRpl8leHxQu8FhYhYjqnOpXmIyDkwTtyyMNRPuGpokF2lw9YQaVFj3R17oHaiGP5dgq9krOvPSTaSVKHbjTTcFxxlIKC6JIUrsQOJNhWkFPaWMdIDfi8ooPwjLV3ymQJzupeU-536DWVfv1ZOiu9jsmG3mTPiWg5WkpN1jM3pW5Gfk17yuK6MAHZLWEPvs7hE_hUv5N4WaDKXkZmGOfIrtt4dE3z_MMcboBn2tN7GINA7KIUvHvzaiwoUvZJT5_y0">
+
+<img src="https://www.plantuml.com/plantuml/img/RP9DRzf048Rl-okcERL8sSG14Y95I2XHUsaa6b1pYA9exHrW5RE3TjSjgEf_x-mQKuDp0SzutcS-_7uAArmZv6M56sTi4FxTs8roQWsg2EJck0sJqYpj6cs0Wd_GYLPHQIo6tGQ1N5YHM70EuUnhIUHWMYeBSwBIdu7oiCtWZoXelI4RMTihkBjxdBtzDDxGU0mlejVBbEpr18Wdz5Iv0Y6LUnCCMV4g71P1sMM9iEspU585kfyy96sMIvYhEDVok71mKiXD2WaFJYq2rwPkJN0i77Q5Mi8CYygPi4l29k3jF7eVJyICXOdoQvPhAggORFGeqqsIzXjQT2gWXjQnXB8wmgWmYjze5TG1UDC53fI49zpmwJz4rgz0D2guQ8YjDKUTDQ_uFCglSb9E9svDUoHhs11y9_XS-VYtbtrXuDysyhQ3x4ku9njyS5KHlsN2SkQGWD_atltnPDbbXpF8uyA_ecDgHiwtjy0UHMTL2HezMnLoqZjcnMLpvICggxqs-_5zJneoQ3gfpJQTyC9rwSa4qQ9hPIjL9japaORd3oRj7zVnm8SojZb89yV0dXLisoOO2BPc4mm5swq9hWMR1wHEmOtW3m-oJC6e1ZJFmzPpzh_DhOW3WQmEqUM14AEi_OuxmVdvoyfeZVOLwew3Jf8xZ3h9FVeacsNrDAVfllW7">
+
+<img src="https://www.plantuml.com/plantuml/img/RP9DRzf048Rl-okcERL8REC02P4Y99IelJGI3QWvH56rzWwmYjb1k-k6gCf_x-mQKuDp0SzutcS-_7uAQzmWg5VV9wVi2eL_CNQhdDg0AWAv1Ux2j3Ghkq4ReE0VTA9LL1gBuMsBG2wiIImvXt3shIHoC2kLXGLHwSz0UTXby5SKjDcIZQpT1TpStCz__pBUq6G2JwBNovJizGI81_HKkG8XbNiJ35dnB1mMWOSi4NO35a-hGBVJkwJDSWaB5UTQ7HSEJmgvII7XpgbbuDhKhGcEXQEkK4kOOr4v4zwIi0buEu_UnnCnOscY_9Bbceeg9XizodIJfFsE5fqAgA5rBA6iZZ0gZE8tMWLr05vrWKCbuG6tVFeFaVKh48qAlZR4rfhZpfeNV1xbrpaffnEtfjsJDMm8lXDyhdpysyk-CF2zZRpk80SIRia67rnLn6-Pi9mv9E2Lt8i_dYmxxt26ULpuJtHCpSZvzXROe-YiAa6ZPwj2JlgDMN7PNFc8ocglpN_-s9D639fDQxFDfhnmNNeoGRJeHjbAbKdsIAJXyOD91yTrFF2XZ6qEqia9i6S5sxO9XeAjsGGZmNPhWal1vW6fKt0b-CE3B5CmhW7DywZrdFrlSotYG22hGtH-8CGeQx_ZJj3lFwsDrcYVeUuux2IvmxYJtADFibbMJtEQ7eX_">
+
+```javascript
+// Display all available themes
+UML.showThemes();
+```
+
+<img src="https://www.plantuml.com/plantuml/img/oqZDAL0eoKZDJItc0W00">
+
+## More examples
+See **index.html** and **examples/** directory.
+
 <img src="https://www.plantuml.com/plantuml/img/bLJRRjim37tNLn3zWAvocxGPYW9fkW45MgnOkhti0cWoRMkLfKoIbsH3_trKRfQ6eV1U0f67XpewP7pfmrhZ5PDQU7-ZHEr42x_PdJBus2ZvPD1xuEojDM6kVY7mWZqpvl57XqRYO4BdKGe_lDv--uuo32uNCgYVAgm74wHj5zQW6Nv5YGjjr-t_K7mGOVYJWsgLgGUNNxxQJOxv9sKM8f9QQwnid6qHWkimGOmDU2taK-riPygPrTR1ib4XhV6DAEsID40bj4-H4YlHwP0gwC7TQA-jAz6bWlkIWzil5JaQk32rVh4J3TgwHro5gLQrYTC0IJ_e6DDO1GWMdAgR0AMA_PGrx6_sFDe6OecUV6AR5AmuV68VFBNviiyKb9bseQ7kIWeMi8Iyu9GAthHnAH3xx5cabJH9vOCZcesCm_lXg6_vsKHvHo0yh2vetZiVONLEBTvZJGqsrnto8yhVsHfkJPeTxxBlka3fvnwO4F1HuHBOWtMXibhPNCfSDbXscWQ-5S5FKnNyXFWpXxJ2mEOqX-XbSY-FbjtRKbNhV-FHm7jXHDtpVQwGdsrUIfyI7u1D5mkhJ8WppVgCaZuFpbPAOuQFUnstfh8PTfvmPqAZAKLcAR-8uo9jjI6H2vHAQF8zAvcaxwH_TETJk3ZfhuZxaOE9HxlbwR7epmrg3BZ7Q7a0ZlNnLw3jUaslaRehqSCLesKx84ME53t2SuGJS7n5-L5odYJdymrxUnudPtwM1f4zEaJZB2esodO1jIF3zz595d4M5sOVNMJHPFFmRL0GZIpTHpoB2lO7">
 
+
 Licensed under [EUPL](https://joinup.ec.europa.eu/collection/eupl/eupl-text-11-12)
+
