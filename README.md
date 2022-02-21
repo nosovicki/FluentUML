@@ -27,12 +27,18 @@ document.write(UML.toHTML()); // Alternatively, myImage.src = UML.toURL();
 ## Basic drawing example
 
 ```javascript
+// Configure subject nodes
 var master = UML.node('Master').type('Server').note('Serves requests');
 var slave = UML.node('Slave').type('Client').note('Responsible for update').width(15);
-slave.up(master).note('Pull changes');
 var db = UML.database('My storage').width(5)
+
+// Configure edges
+slave.up(master).note('Pull changes');
 slave.right(db);
+// Here we configure an edge and a node in single line
 master.right(UML.cloud('Unknown storage').width(10));
+
+// Configure containment
 UML.cloud('Cloud').contains(master);
 UML.frame('Premises').contains(slave,db)
 ```
